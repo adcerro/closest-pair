@@ -1,5 +1,5 @@
 package closest.pair;/*
- * Algorithms and Complexity                                October 5, 2022,
+ * Algorithms and Complexity                                October 15, 2022,
  * IST 4310_01
  * Prof. M. Diaz-Maldonado
  * Estudiante: Alan Daniel Florez Cerro
@@ -18,82 +18,83 @@ import java.util.Random;
 
 public class ClosestPair {
 
-    public static ArrayList pointl = new ArrayList<Point>();
+    public static ArrayList pointList = new ArrayList<Point>();
     public static void main(String[] args) {
         generate(6, 15,21);
-        for (Object p : pointl) {
+        for (Object p : pointList) {
             Point a = (Point) p;
             System.out.println(a.x + ", " + a.y);
         }
         System.out.println("\nBy brute force only:");
         double[] closest= new double[5];
         Distance d = new Distance();
-        closest= d.bruteForce(pointl);
+        closest= d.bruteForce(pointList);
         System.out.println("The closest points are: (" + closest[1] + ", " + closest[2] + ") and (" + closest[3] + ", " + closest[4] + ")");
         System.out.println("Distance: " + closest[0]);
         System.out.println("\nUsing divide and conquer:");
         double[] closestdiv= new double[5];
-        closestdiv= d.divideandconquer(pointl);
+        closestdiv= d.divideAndConquer(pointList);
         System.out.println("The closest points are: (" + closestdiv[1] + ", " + closestdiv[2] + ") and (" + closestdiv[3] + ", " + closestdiv[4] + ")");
         System.out.println("Distance: " + closestdiv[0]);
-
-
     }
 
     /**
      * The following void creates and stores de desired amount of points in an
      * arraylist each point with random x and y coordinates ranging between 0
-     * and 20
+     * and 20.<p>
+     * Once it creates the list with points it checks for any points with the same x value and
+     * changes the x value of one of the points with a random one according to the parameters given.<p>
+     * The comparison is done against all elements of the list and the list will be checked and modified until none of
+     * the x values is modified.</p>
+     * Finally, the list is sorted in ascending order according to the x value of the points.<p>
+     * input: How many points you want and the maximum x value for half of the points.<p>
+     * output: An ArrayList containing the desired amount of points sorted in ascending order.
      *
-     * @param points The amount of points you want to generate
-     * @param midpoint The maximum value of x for the first half of the points,
-     * and minimun value for the second half input: How many points you want and
-     * the maximun x value for half of the points output: An ArrayList
-     * containing the desired amount of points sorted in ascending order
-     * @param max The maximum value of x and y
+     * @param points The amount of points you want to generate.
+     * @param midpoint The maximum possible value of x for the first half of the points,
+     * and minimum value for the second half.
+     * @param max The maximum possible value of x and y.
      */
     public static void generate(int points, int midpoint,int max) {
         Random random = new Random();
+        Point a;
+        boolean changed=false;
         for (int i = 1; i <= points / 2; i++) {
-            pointl.add(new Point(random.nextInt(midpoint), random.nextInt(max)));
+            pointList.add(new Point(random.nextInt(midpoint), random.nextInt(max)));
         }
         for (int i = points / 2 + 1; i <= points; i++) {
-            pointl.add(new Point( random.nextInt(midpoint+1, max), random.nextInt(max)));
+            pointList.add(new Point( random.nextInt(midpoint+1, max), random.nextInt(max)));
         }
-        avoidRepeatedX(midpoint,max);
-        Collections.sort(pointl);
-    }
-    public static void avoidRepeatedX(int midpoint, int max){
-        Point a;
-        Random random = new Random();
-        for(Object p : pointl){
-            for (int i = 0;i<pointl.size();i++){
-                a= (Point)pointl.get(i);
-                if(a.getX()== ((Point) p).getX() && i != pointl.indexOf((Point) p)){
-                    if (a.getX()>=midpoint){
-                        a.setX(random.nextInt(midpoint+1,max));
-                    }else {
-                        a.setX(random.nextInt(midpoint));
+        do{
+            changed=false;
+            for(Object p : pointList){
+                for (int i = 0;i<pointList.size();i++){
+                    a= (Point)pointList.get(i);
+                    if(a.getX()== ((Point) p).getX() && i != pointList.indexOf((Point) p)){
+                        if (a.getX()>=midpoint){
+                            a.setX(random.nextInt(midpoint+1,max));
+                        }else {
+                            a.setX(random.nextInt(midpoint));
+                        }
+                        changed=true;
                     }
-                    System.out.println("Changes have been made");
                 }
             }
-        }
-
+        }while (changed);
+        Collections.sort(pointList);
     }
-
 
     /**
      * The following method returns the distance between two point objects
-     * comparing their x and y
+     * comparing their x and y.<p>
+     * inputs: Point a and point b.<p>
+     * outputs: The distance between the points.
      *
-     * @param a The first point to compare
-     * @param b The second point to compare
-     * @return The distance between these points as a double inputs: Point a and
-     * point b outputs: The distance between the points
+     * @param a The first point to compare.
+     * @param b The second point to compare.
+     * @return The distance between these points as a double.
      */
     public static double distance(Point a, Point b) {
-
         return Math.sqrt(Math.pow((b.y - a.y), 2) + Math.pow((b.x - a.x), 2));
     }
     public static class Distance{
@@ -103,11 +104,12 @@ public class ClosestPair {
         /**
          * The following method iterates through the ArrayList comparing each point
          * with the others and determines which pair has the minimal distance of all
-         * and prints the pair and their distance in the console
-         *
-         * @param list An ArrayList containing all the points
-         * @return The closest distance input: The Array with all the points output:
-         * The closest pair and their distance
+         * and stores the pair and their distance in an array like this:<p>
+         * [distance | firstPointX | firstPointY | secondPointX | secondPointY]<p>
+         * input: The ArrayList with all the points.<p>
+         * output: An array with the closest pair and their distance.
+         * @param list An ArrayList containing all the points.
+         * @return An array containing the distance in the first position and the points' coordinates in the rest of the array.
          */
         public double[] bruteForce(ArrayList<Point> list) {
             double[] closestd = new double[5];
@@ -129,7 +131,18 @@ public class ClosestPair {
             }
             return closestd;
         }
-        public double[] divideandconquer(ArrayList<Point> list) {
+        /**
+         * The following method iterates through the ArrayList and splits it into two
+         * ArrayLists with half the points each, then it executes the bruteforce method in
+         * both, shows their output in the console and compares the closest distances obtained.<p>
+         * Finally, it returns an array containing the points with the minor distance of the two.<p>
+         * input: The ArrayList with all the points.<p>
+         * output: An array with the closest pair and their distance in this way:<p>
+         * [distance | firstPointX | firstPointY | secondPointX | secondPointY]
+         * @param list An ArrayList containing all the points.
+         * @return An array containing the distance in the first position and the points' coordinates in the rest of the array.
+         */
+        public double[] divideAndConquer(ArrayList<Point> list) {
             for (Point p : list.subList(0, list.size() / 2)) {
                 firsthalf.add(p);
             }
@@ -138,8 +151,14 @@ public class ClosestPair {
             }
             double[] first= new double[5];
             first = bruteForce(firsthalf);
+            System.out.println("First Pair");
+            System.out.println("(" + first[1] + ", " + first[2] + ") and (" + first[3] + ", " + first[4] + ")");
+            System.out.println("Distance: " + first[0]+"\n");
             double[] second= new double[5];
             second = bruteForce(secondhalf);
+            System.out.println("Second Pair");
+            System.out.println("(" + second[1] + ", " + second[2] + ") and (" + second[3] + ", " + second[4] + ")");
+            System.out.println("Distance: " + second[0]+"\n");
             if (first[0] > second[0]) {
                 System.out.println("The second pair is the closest");
                 return second;
