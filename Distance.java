@@ -3,12 +3,21 @@ package closest.pair;
 import java.util.ArrayList;
 
 public class Distance{
-    public ArrayList firsthalf = new ArrayList<Point>();
-    public ArrayList secondhalf = new ArrayList<Point>();
-    public ArrayList firstgroup = new ArrayList<Point>();
-    public ArrayList secondgroup = new ArrayList<Point>();
-
+    /**
+     * The following void takes the two ArrayLists that divide all the points and checks for the points that have a
+     * distance in x with a point of the closest distance that was found in that group and stores them in two arrays (one
+     * for each group). Then it compares each point of one ArrayList against all the others in the other ArrayList.<p>
+     * If the distance of the points compared is lower than the one found before then the array containing the closest points
+     * stores the new distance and the points.
+     * Input: two ArrayLists containing a subgroup of all points each and an array with the preliminary closest distance<P>
+     * Output: An array with the closest distance of all points
+     * @param dist An array containing the closest distance found and coordinates of the points that have it
+     * @param listA The ArrayList containing the first group of the points
+     * @param listB The ArrayList containing the second group of the points
+     * */
     public void bruteForce(ArrayList<Point> listA, ArrayList<Point> listB, double[] dist){
+        ArrayList<Point> firstgroup = new ArrayList<Point>();
+        ArrayList<Point> secondgroup = new ArrayList<Point>();
         for (Point pa : listA) {
             if (dist[1] - pa.getX() <= dist[0]) {
                 firstgroup.add(pa);
@@ -19,6 +28,21 @@ public class Distance{
                 secondgroup.add(pb);
             }
         }
+        for (Point pointf:firstgroup) {
+            for (Point points:secondgroup) {
+                if (distance(pointf, points) < dist[0]) {
+                    dist[0] = distance(pointf, points);
+                    dist[1] = pointf.getX();
+                    dist[2] = pointf.getY();
+                    dist[3] = points.getX();
+                    dist[4] = points.getY();
+                    System.out.println("Pair in between groups found!");
+                    System.out.println("The points ("+dist[1]+", "+dist[2]+") and ("+dist[3]+", "+dist[4]+")");
+                    System.out.println("Distance:"+dist[0]+"\n");
+                }
+            }
+        }
+
     }
     /**
      * The following method iterates through the ArrayList comparing each point
@@ -43,7 +67,7 @@ public class Distance{
                 if (distance(pj, list.get(i)) < closestd[0]) {
                     closestd[0] = distance(pj, list.get(i));
                     closestd[1] = pj.getX();
-                    closestd[2] = pj.getX();
+                    closestd[2] = pj.getY();
                     closestd[3] = list.get(i).getX();
                     closestd[4] = list.get(i).getY();
                 }
@@ -63,6 +87,8 @@ public class Distance{
      * @return An array containing the distance in the first position and the points' coordinates in the rest of the array.
      */
     public double[] divideAndConquer(ArrayList<Point> list) {
+        ArrayList firsthalf = new ArrayList<Point>();
+        ArrayList secondhalf = new ArrayList<Point>();
         for (Point p : list.subList(0, list.size() / 2)) {
             firsthalf.add(p);
         }
@@ -80,13 +106,13 @@ public class Distance{
         System.out.println("(" + second[1] + ", " + second[2] + ") and (" + second[3] + ", " + second[4] + ")");
         System.out.println("Distance: " + second[0]+"\n");
         if (first[0] > second[0]) {
-            System.out.println("The second pair is the closest");
+            bruteForce(firsthalf,secondhalf,second);
             return second;
         } else if (first[0] == second[0]) {
-            System.out.println("Both pairs have equal distance");
+            bruteForce(firsthalf,secondhalf,second);
             return second;
         } else {
-            System.out.println("The first pair is the closest");
+            bruteForce(firsthalf,secondhalf,first);
             return first;
         }
     }

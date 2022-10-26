@@ -42,10 +42,8 @@ public class ClosestPair {
      * The following void creates and stores de desired amount of points in an
      * arraylist each point with random x and y coordinates ranging between 0
      * and 20.<p>
-     * Once it creates the list with points it checks for any points with the same x value and
-     * changes the x value of one of the points with a random one according to the parameters given.<p>
-     * The comparison is done against all elements of the list and the list will be checked and modified until none of
-     * the x values is modified.</p>
+     * When the points with random coordinates are created the algorithm checks if it's x value has been taken by another point,
+     * if it has, the new point is discarded and a new one is generated, if not, then the point gets added to the ArrayList<p>
      * Finally, the list is sorted in ascending order according to the x value of the points.<p>
      * input: How many points you want and the maximum x value for half of the points.<p>
      * output: An ArrayList containing the desired amount of points sorted in ascending order.
@@ -58,32 +56,37 @@ public class ClosestPair {
     public static void generate(int points, int midpoint,int max) {
         Random random = new Random();
         Point a;
-        boolean changed=false;
-        for (int i = 1; i <= points / 2; i++) {
-            pointList.add(new Point(random.nextInt(midpoint), random.nextInt(max)));
-        }
-        for (int i = points / 2 + 1; i <= points; i++) {
-            pointList.add(new Point( midpoint+1+random.nextInt(max-midpoint), random.nextInt(max)));
-        }
-        do{
-            changed=false;
-            for(int j=0;j<pointList.size() ; j++){
-                Point p = pointList.get(j);
-                for (int i = 0;i<pointList.size();i++){
-                    a= pointList.get(i);
-                    if(a.getX()== p.getX() && i != pointList.indexOf(p)){
-                        if (a.getX()>=midpoint){
-                            pointList.remove(i);
-                            pointList.add(pointList.indexOf(p),new Point(midpoint+1+random.nextInt(max-midpoint),p.getY()));
-                        }else {
-                            pointList.remove(i);
-                            pointList.add(pointList.indexOf(p),new Point(random.nextInt(midpoint),p.getY()));
-                        }
-                        changed=true;
-                    }
-                }
+        int i=1,j=points/2+1;
+        while (i <= points/2) {
+            a= new Point(random.nextInt(midpoint), random.nextInt(max));
+            if(!xValueUsed(pointList,a)){
+                pointList.add(a);
+                i++;
             }
-        }while (changed);
+        }
+        while (j<= points) {
+            a= new Point( midpoint+1+random.nextInt(max-midpoint), random.nextInt(max));
+            if(!xValueUsed(pointList,a)){
+                pointList.add(a);
+                j++;
+            }
+        }
         Collections.sort(pointList);
+    }
+    /**
+     * The following void takes a point and compares it's x value with the x value of each point in an ArrayList<p>
+     * If a match is found then returns true, if not, it returns false.<p>
+     * Input: An ArrayList of points and a point<p>
+     * Output: true or false.
+     * @param point The point that will be compared with all the elements in the list
+     * @param pointList The ArrayList containing all the points
+     * */
+    public static boolean xValueUsed(ArrayList<Point> pointList,Point point){
+        for (Point p: pointList){
+            if (p.getX()==point.getX()){
+                return true;
+            }
+        }
+        return false;
     }
 }
