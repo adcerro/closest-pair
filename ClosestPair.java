@@ -13,22 +13,40 @@ package closest.pair;
  * strategy.
  *
  */
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
 public class ClosestPair {
 
-    public static ArrayList<Point> pointList = new ArrayList<Point>();
+    public static ArrayList<Point> pointList = new ArrayList<>();
     public static void main(String[] args) {
-        generate(6, 15,21);
-        for (Point p : pointList) {
-            System.out.println(p.getX() + ", " + p.getY());
-        }
+        create("results.txt");
         System.out.println("\nBy brute force only:");
         double[] closest= new double[5];
         Distance d = new Distance();
-        closest= d.bruteForce(pointList);
+        try {
+            PrintWriter printer = new PrintWriter("results.txt");
+            for (int i = 2; i <=18 ; i++) {
+                int points =(int)Math.pow(2,i);
+                generate(points, (int)Math.pow(4,i));
+                for (Point p : pointList) {
+                    System.out.println(p.getX() + ", " + p.getY());
+                }
+                long start = System.nanoTime();
+                closest= d.bruteForce(pointList);
+                long end = System.nanoTime();
+                long time = end - start;
+                printer.printf("%s\n",points+" "+time);
+            }
+            printer.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("The closest points are: (" + closest[1] + ", " + closest[2] + ") and (" + closest[3] + ", " + closest[4] + ")");
         System.out.println("Distance: " + closest[0]);
         System.out.println("\nUsing divide and conquer:");
@@ -37,7 +55,14 @@ public class ClosestPair {
         System.out.println("The closest points are: (" + closestdiv[1] + ", " + closestdiv[2] + ") and (" + closestdiv[3] + ", " + closestdiv[4] + ")");
         System.out.println("Distance: " + closestdiv[0]);
     }
-
+    public static void create(String name){
+        try {
+            File f= new File(name);
+            f.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     /**
      * The following void creates and stores de desired amount of points in an
      * arraylist each point with random x and y coordinates ranging between 0
@@ -45,17 +70,16 @@ public class ClosestPair {
      * When the points with random coordinates are created the algorithm checks if it's x value has been taken by another point,
      * if it has, the new point is discarded and a new one is generated, if not, then the point gets added to the ArrayList<p>
      * Finally, the list is sorted in ascending order according to the x value of the points.<p>
-     * input: How many points you want and the maximum x value for half of the points.<p>
+     * input: How many points you want and the maximum x value for the points.<p>
      * output: An ArrayList containing the desired amount of points sorted in ascending order.
      *
      * @param points The amount of points you want to generate.
-     * @param midpoint The maximum possible value of x for the first half of the points,
-     * and minimum value for the second half.
      * @param max The maximum possible value of x and y.
      */
-    public static void generate(int points, int midpoint,int max) {
+    public static void generate(int points,int max) {
         Random random = new Random();
         Point a;
+        int midpoint=max/2;
         int i=1,j=points/2+1;
         while (i <= points/2) {
             a= new Point(random.nextInt(midpoint), random.nextInt(max));
