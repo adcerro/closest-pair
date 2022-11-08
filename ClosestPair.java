@@ -26,34 +26,35 @@ public class ClosestPair {
     public static ArrayList<Point> pointList = new ArrayList<>();
     public static void main(String[] args) {
         create("results.txt");
-        System.out.println("\nBy brute force only:");
+//        System.out.println("\nBy brute force only:");
         double[] closest= new double[5];
         Distance d = new Distance();
         try {
             PrintWriter printer = new PrintWriter("results.txt");
-            for (int i = 2; i <=18 ; i++) {
+            for (int i = 2; i <=19 ; i++) {
                 int points =(int)Math.pow(2,i);
                 generate(points, (int)Math.pow(4,i));
-                for (Point p : pointList) {
-                    System.out.println(p.getX() + ", " + p.getY());
-                }
+//                for (Point p : pointList) {
+//                    System.out.println(p.getX() + ", " + p.getY());
+//                }
                 long start = System.nanoTime();
                 closest= d.bruteForce(pointList);
                 long end = System.nanoTime();
                 long time = end - start;
-                printer.printf("%s\n",points+" "+time);
+                printer.printf("%s\n",points+" "+d.getBruteIter()+" "+time);
+                d.resetCounter();
             }
             printer.close();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("The closest points are: (" + closest[1] + ", " + closest[2] + ") and (" + closest[3] + ", " + closest[4] + ")");
-        System.out.println("Distance: " + closest[0]);
-        System.out.println("\nUsing divide and conquer:");
-        double[] closestdiv= new double[5];
-        closestdiv= d.divideAndConquer(pointList);
-        System.out.println("The closest points are: (" + closestdiv[1] + ", " + closestdiv[2] + ") and (" + closestdiv[3] + ", " + closestdiv[4] + ")");
-        System.out.println("Distance: " + closestdiv[0]);
+//        System.out.println("The closest points are: (" + closest[1] + ", " + closest[2] + ") and (" + closest[3] + ", " + closest[4] + ")");
+//        System.out.println("Distance^2: " + closest[0]);
+//        System.out.println("\nUsing divide and conquer:");
+//        double[] closestdiv= new double[5];
+//        closestdiv= d.divideAndConquer(pointList);
+//        System.out.println("The closest points are: (" + closestdiv[1] + ", " + closestdiv[2] + ") and (" + closestdiv[3] + ", " + closestdiv[4] + ")");
+//        System.out.println("Distance^2: " + closestdiv[0]);
     }
     public static void create(String name){
         try {

@@ -1,33 +1,31 @@
 package closest.pair;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Distance{
+    private long bruteIter =0;
+    private long divideIter =0;
+    public void resetCounter(){
+        bruteIter =0;
+        divideIter =0;
+    }
+
     /**
      * The following void takes the two ArrayLists that divide all the points and checks for the points that have a
-     * distance in x with a point of the closest distance that was found in that group and stores them in two arrays (one
-     * for each group). Then it compares each point of one ArrayList against all the others in the other ArrayList.<p>
+     * distance in x with the closest point to the division that is lower than the closest distance found before (storing them in an
+     * ArrayList for each group). Then it compares each point of one of those ArrayList against all the others in the other.<p>
      * If the distance of the points compared is lower than the one found before then the array containing the closest points
      * stores the new distance and the points.
-     * Input: two ArrayLists containing a subgroup of all points each and an array with the preliminary closest distance<P>
-     * Output: An array with the closest distance of all points
+     * Input: two ArrayLists containing a subgroup of all points each and an array with the preliminary closest distance.<P>
+     * Output: An array with the closest distance of all points.
      * @param dist An array containing the closest distance found and coordinates of the points that have it
      * @param listA The ArrayList containing the first group of the points
      * @param listB The ArrayList containing the second group of the points
      * */
     public void bruteForce(ArrayList<Point> listA, ArrayList<Point> listB, double[] dist){
-        ArrayList<Point> firstgroup = new ArrayList<Point>();
-        ArrayList<Point> secondgroup = new ArrayList<Point>();
-        for (Point pa : listA) {
-            if (dist[1] - pa.getX() <= dist[0]) {
-                firstgroup.add(pa);
-            }
-        }
-        for (Point pb : listB) {
-            if (dist[1] - pb.getX() <= dist[0]) {
-                secondgroup.add(pb);
-            }
-        }
+        ArrayList<Point> firstgroup = discard(listA,listA.size()-1,dist[0]);
+        ArrayList<Point> secondgroup = discard(listB,0,dist[0]);
         for (Point pointf:firstgroup) {
             for (Point points:secondgroup) {
                 if (distance(pointf, points) < dist[0]) {
@@ -40,10 +38,50 @@ public class Distance{
                     System.out.println("The points ("+dist[1]+", "+dist[2]+") and ("+dist[3]+", "+dist[4]+")");
                     System.out.println("Distance:"+dist[0]+"\n");
                 }
+                divideIter++;
             }
+        }
+    }
+    /**
+     * The following method checks if the points of an ArrayList have a distance x distance with the specified element of the
+     * ArrayList that is lower than the specified distance, if so, it adds the point to the ArrayList it returns.<p>
+     * Inputs: The source arraylist,the index of the element that is used to measure the distance and the closest distance previously found.<p>
+     * Output: The ArrayList for the results filled with the points that match the criteria.
+     * @param list  The ArrayList containing all the points
+     * @param index  The index of the element to calculate distance
+     * @param dist  The distance criteria
+     * @return  An ArrayList with the points that match the criteria.
+     * */
+    public ArrayList<Point> discard(ArrayList<Point> list,int index, double dist){
+        if (index>=list.size()||index<0){
+            throw new IndexOutOfBoundsException("");
+        }else{
+            ArrayList<Point> result = new ArrayList<Point>();
+            discard(list.iterator(),list, result ,index,dist);
+            return result;
+        }
+    }
+    /**
+    * The following void checks if the points of an ArrayList have a distance x distance with the specified element of the
+    * ArrayList that is lower than the specified distance, if so, it adds the point to a separate ArrayList<p>
+    * Inputs: The iterator of the source arraylist, the source arraylist, the ArrayList for the results, the index of the
+    * element that is used to measure the distance and the closest distance previously found.<p>
+    * Output: The ArrayList for the results filled with the points that match the criteria.
+    * @param a  The iterator of the ArrayList
+    * @param list  The ArrayList containing all the points
+    * @param listf  The ArrayList that will store all points that match the criteria
+    * @param index  The index of the element to calculate distance
+    * @param dist  The distance criteria
+    * */
+    private void discard(Iterator<Point> a,ArrayList<Point> list,ArrayList<Point> listf,int index, double dist){
+        divideIter++;
+        if (a.hasNext() && Math.abs(list.get(index).getX()-a.next().getX())<dist){
+            listf.add(a.next());
+            discard(a,list,listf,index,dist);
         }
 
     }
+
     /**
      * The following method iterates through the ArrayList comparing each point
      * with the others and determines which pair has the minimal distance of all
@@ -71,6 +109,8 @@ public class Distance{
                     closestd[3] = list.get(i).getX();
                     closestd[4] = list.get(i).getY();
                 }
+                bruteIter++;
+                divideIter++;
             }
         }
         return closestd;
@@ -87,14 +127,8 @@ public class Distance{
      * @return An array containing the distance in the first position and the points' coordinates in the rest of the array.
      */
     public double[] divideAndConquer(ArrayList<Point> list) {
-        ArrayList firsthalf = new ArrayList<Point>();
-        ArrayList secondhalf = new ArrayList<Point>();
-        for (Point p : list.subList(0, list.size() / 2)) {
-            firsthalf.add(p);
-        }
-        for (Point p : list.subList(list.size() / 2, list.size())) {
-            secondhalf.add(p);
-        }
+        ArrayList<Point> firsthalf = sub(list,0, list.size()/2-1);
+        ArrayList<Point> secondhalf = sub(list, list.size()/2, list.size()-1);
         double[] first= new double[5];
         first = bruteForce(firsthalf);
         System.out.println("First Pair");
@@ -117,6 +151,44 @@ public class Distance{
         }
     }
     /**
+     *  The following method creates an ArrayList list with the elements of other within the specified interval <p>
+     *  Inputs: The source ArrayList, the lowest value and the top value of the interval and the ArrayList that will contain
+     *  the result.<p>
+     *  Outputs: A sub-ArrayList of the provided ArrayList
+     *  @param list  The source ArrayList
+     *  @param a  The lowest value (index)of the interval
+     *  @param b  The top value (index) of the interval
+     *  @return A sub-ArrayList of the provided ArrayList
+     * */
+    public ArrayList<Point> sub(ArrayList<Point> list,int a, int b){
+        if (a>=list.size() || b>=list.size() || a<0 || b<0){
+            throw new IndexOutOfBoundsException("The specified interval is not contained in the provided ArrayList");
+        }else{
+            ArrayList<Point> result= new ArrayList<>();
+            sub(list,a,b, result);
+            return result;
+        }
+    }
+    /**
+     *  The following void creates an ArrayList list with the elements of other within the specified interval <p>
+     *  Inputs: The source ArrayList, the lowest value and the top value of the interval and the ArrayList that will contain
+     *  the result.<p>
+     *  Outputs: A sub-ArrayList of the provided ArrayList
+     *  @param list  The source ArrayList
+     *  @param a  The lowest value (index)of the interval
+     *  @param b  The top value (index) of the interval
+     *  @param result  The ArrayList acting as a sub-List
+     * */
+    private void sub(ArrayList<Point> list,int a, int b, ArrayList<Point> result){
+        if(a==b){
+            result.add(list.get(a));
+        }else if(a<b){
+            result.add(list.get(a));
+            sub(list,a+1,b, result);
+        }
+        divideIter++;
+    }
+    /**
      * The following method returns the distance between two point objects
      * comparing their x and y.<p>
      * inputs: Point a and point b.<p>
@@ -127,6 +199,14 @@ public class Distance{
      * @return The distance between these points as a double.
      */
     public double distance(Point a, Point b) {
-        return Math.sqrt(Math.pow((b.getY() - a.getY()), 2) + Math.pow((b.getX() - a.getX()), 2));
+        return Math.pow((b.getY() - a.getY()), 2) + Math.pow((b.getX() - a.getX()), 2);
+    }
+
+    public long getDivideIter() {
+        return divideIter;
+    }
+
+    public long getBruteIter() {
+        return bruteIter;
     }
 }
