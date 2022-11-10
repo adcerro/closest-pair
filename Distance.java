@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Distance{
-    private long bruteIter =0;
-    private long divideIter =0;
+
+    private long iter =0;
     public void resetCounter(){
-        bruteIter =0;
-        divideIter =0;
+        iter =0;
     }
 
     /**
@@ -38,7 +37,7 @@ public class Distance{
                     System.out.println("The points ("+dist[1]+", "+dist[2]+") and ("+dist[3]+", "+dist[4]+")");
                     System.out.println("Distance:"+dist[0]+"\n");
                 }
-                divideIter++;
+                iter++;
             }
         }
     }
@@ -74,7 +73,6 @@ public class Distance{
     * @param dist  The distance criteria
     * */
     private void discard(Iterator<Point> a,ArrayList<Point> list,ArrayList<Point> listf,int index, double dist){
-        divideIter++;
         if (a.hasNext() && Math.abs(list.get(index).getX()-a.next().getX())<dist){
             listf.add(a.next());
             discard(a,list,listf,index,dist);
@@ -109,8 +107,7 @@ public class Distance{
                     closestd[3] = list.get(i).getX();
                     closestd[4] = list.get(i).getY();
                 }
-                bruteIter++;
-                divideIter++;
+                iter++;
             }
         }
         return closestd;
@@ -186,7 +183,6 @@ public class Distance{
             result.add(list.get(a));
             sub(list,a+1,b, result);
         }
-        divideIter++;
     }
     /**
      * The following method returns the distance between two point objects
@@ -202,11 +198,8 @@ public class Distance{
         return Math.pow((b.getY() - a.getY()), 2) + Math.pow((b.getX() - a.getX()), 2);
     }
 
-    public long getDivideIter() {
-        return divideIter;
-    }
 
-    public long getBruteIter() {
-        return bruteIter;
+    public long getIter() {
+        return iter;
     }
 }
