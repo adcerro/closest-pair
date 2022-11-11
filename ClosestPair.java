@@ -24,11 +24,11 @@ import java.util.Random;
 
 public class ClosestPair {
 
-    public static ArrayList<Point> pointList = new ArrayList<>();
+    public static ArrayList<Point> pointList;
 
     public static void main(String[] args) {
-        testBrute("results.txt");
-        //testDivide("results.txt");
+        testBrute("brute.txt");
+        testDivide("divide.txt");
     }
 
     //Performs the test with the BruteForce algorithm
@@ -64,7 +64,7 @@ public class ClosestPair {
                 int points = (int) Math.pow(2, i);
                 long sumIter = 0;
                 long sumTime = 0;
-                for (int j = 1; j <= 10; j++) {
+                for (int j = 1; j <= 4; j++) {
                     double[] closest = new double[5];
                     generate(points, (int) Math.pow(4, i), 1000);
                     long start = System.nanoTime();
@@ -75,7 +75,7 @@ public class ClosestPair {
                     sumTime = sumTime + time;
                     d.resetCounter();
                 }
-                printer.printf("%s\n", points + " " + sumIter / 10 + " " + sumTime / 10);
+                printer.printf("%s\n", points + " " + sumIter / 4 + " " + sumTime / 4);
             }
             printer.close();
         } catch (FileNotFoundException e) {
@@ -108,6 +108,7 @@ public class ClosestPair {
      * @param maxY   The maximum possible value of y.
      */
     public static void generate(int points, int maxX, int maxY) {
+        pointList = new ArrayList<>();
         Random random = new Random();
         Point a;
         int midpoint = maxX / 2;
@@ -135,7 +136,7 @@ public class ClosestPair {
      * Input: An ArrayList of points and a point<p>
      * Output: true or false.
      *
-     * @param point     The point that will be compared with all the elements in the list
+     * @param point  The point that will be compared with all the elements in the list
      * @param pointList The ArrayList containing all the points
      */
     public static boolean xValueUsed(ArrayList<Point> pointList, Point point) {

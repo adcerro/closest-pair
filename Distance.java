@@ -23,14 +23,14 @@ public class Distance{
      * @param listB The ArrayList containing the second group of the points
      * */
     public void bruteForce(ArrayList<Point> listA, ArrayList<Point> listB, double[] dist){
-        ArrayList<Point> firstgroup = discard(listA,listA.size()-1,dist[0]);
-        ArrayList<Point> secondgroup = discard(listB,0,dist[0]);
-        for (Point pointf:firstgroup) {
-            for (Point points:secondgroup) {
-                if (distance(pointf, points) < dist[0]) {
-                    dist[0] = distance(pointf, points);
-                    dist[1] = pointf.getX();
-                    dist[2] = pointf.getY();
+        ArrayList<Point> firstGroup = discard(listA,listA.size()-1,dist[0]);
+        ArrayList<Point> secondGroup = discard(listB,0,dist[0]);
+        for (Point pointF:firstGroup) {
+            for (Point points:secondGroup) {
+                if (distance(pointF, points) < dist[0]) {
+                    dist[0] = distance(pointF, points);
+                    dist[1] = pointF.getX();
+                    dist[2] = pointF.getY();
                     dist[3] = points.getX();
                     dist[4] = points.getY();
                     System.out.println("Pair in between groups found!");
@@ -68,14 +68,14 @@ public class Distance{
     * Output: The ArrayList for the results filled with the points that match the criteria.
     * @param a  The iterator of the ArrayList
     * @param list  The ArrayList containing all the points
-    * @param listf  The ArrayList that will store all points that match the criteria
+    * @param listF  The ArrayList that will store all points that match the criteria
     * @param index  The index of the element to calculate distance
     * @param dist  The distance criteria
     * */
-    private void discard(Iterator<Point> a,ArrayList<Point> list,ArrayList<Point> listf,int index, double dist){
+    private void discard(Iterator<Point> a,ArrayList<Point> list,ArrayList<Point> listF,int index, double dist){
         if (a.hasNext() && Math.abs(list.get(index).getX()-a.next().getX())<dist){
-            listf.add(a.next());
-            discard(a,list,listf,index,dist);
+            listF.add(a.next());
+            discard(a,list,listF,index,dist);
         }
 
     }
@@ -91,26 +91,26 @@ public class Distance{
      * @return An array containing the distance in the first position and the points' coordinates in the rest of the array.
      */
     public double[] bruteForce(ArrayList<Point> list) {
-        double[] closestd = new double[5];
-        closestd[0] = distance(list.get(0), list.get(1));
-        closestd[1] = list.get(0).getX();
-        closestd[2] = list.get(0).getY();
-        closestd[3] = list.get(1).getX();
-        closestd[4] = list.get(1).getY();
+        double[] closestD = new double[5];
+        closestD[0] = distance(list.get(0), list.get(1));
+        closestD[1] = list.get(0).getX();
+        closestD[2] = list.get(0).getY();
+        closestD[3] = list.get(1).getX();
+        closestD[4] = list.get(1).getY();
         for (int j = 0; j < list.size()-1; j++) {
             Point pj = list.get(j);
             for (int i = list.indexOf(pj) + 1; i < list.size(); i++) {
-                if (distance(pj, list.get(i)) < closestd[0]) {
-                    closestd[0] = distance(pj, list.get(i));
-                    closestd[1] = pj.getX();
-                    closestd[2] = pj.getY();
-                    closestd[3] = list.get(i).getX();
-                    closestd[4] = list.get(i).getY();
+                if (distance(pj, list.get(i)) < closestD[0]) {
+                    closestD[0] = distance(pj, list.get(i));
+                    closestD[1] = pj.getX();
+                    closestD[2] = pj.getY();
+                    closestD[3] = list.get(i).getX();
+                    closestD[4] = list.get(i).getY();
                 }
                 iter++;
             }
         }
-        return closestd;
+        return closestD;
     }
     /**
      * The following method iterates through the ArrayList and splits it into two
@@ -124,26 +124,26 @@ public class Distance{
      * @return An array containing the distance in the first position and the points' coordinates in the rest of the array.
      */
     public double[] divideAndConquer(ArrayList<Point> list) {
-        ArrayList<Point> firsthalf = sub(list,0, list.size()/2-1);
-        ArrayList<Point> secondhalf = sub(list, list.size()/2, list.size()-1);
+        ArrayList<Point> firstHalf = sub(list,0, list.size()/2-1);
+        ArrayList<Point> secondHalf = sub(list, list.size()/2, list.size()-1);
         double[] first= new double[5];
-        first = bruteForce(firsthalf);
+        first = bruteForce(firstHalf);
         System.out.println("First Pair");
         System.out.println("(" + first[1] + ", " + first[2] + ") and (" + first[3] + ", " + first[4] + ")");
         System.out.println("Distance: " + first[0]+"\n");
         double[] second= new double[5];
-        second = bruteForce(secondhalf);
+        second = bruteForce(secondHalf);
         System.out.println("Second Pair");
         System.out.println("(" + second[1] + ", " + second[2] + ") and (" + second[3] + ", " + second[4] + ")");
         System.out.println("Distance: " + second[0]+"\n");
         if (first[0] > second[0]) {
-            bruteForce(firsthalf,secondhalf,second);
+            bruteForce(firstHalf,secondHalf,second);
             return second;
         } else if (first[0] == second[0]) {
-            bruteForce(firsthalf,secondhalf,second);
+            bruteForce(firstHalf,secondHalf,second);
             return second;
         } else {
-            bruteForce(firsthalf,secondhalf,first);
+            bruteForce(firstHalf,secondHalf,first);
             return first;
         }
     }
