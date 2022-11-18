@@ -1,0 +1,95 @@
+\section{Metodología}
+Se tomará el tiempo de ejecución del algoritmo de fuerza bruta y de "divide y vencerás" en conjuntos de n puntos generados aleatoriamente y ordenados de forma ascendente respecto a su valor de x donde n aumentará en potencias de 2, desde $2^{2} a 2^{18}$.\\
+
+Para el algoritmo de fuerza bruta se tomará el tiempo y las iteraciones obtenidas un vez ejecutado sobre el conjunto de puntos, por otra parte para el algoritmo de divide y vencerás se ejecutara el mismo cuatro veces sobre conjuntos aleatorios distintos para cada tamaño n y los tiempos e iteraciones obtenidas serán promediados.\\
+
+El tiempo en nanosegundos se medirá usando la función System.nanotime() de java antes y después de las lineas de código que llaman a cada algoritmo, la resta de ambas permite hallar el tiempo de ejecución del algoritmo.
+
+Para contar las  iteraciones se pondrá un contador dentro de los ciclos usados para determinar el par de puntos más cercanos. A continuación se muestran los algoritmos usados:
+
+\begin{algorithm}[h!]
+\caption{Algoritmo de fuerza bruta}
+\begin{algorithmic}
+\State $bruteForce(list)$
+    \State $closest[] \gets Empty$
+    \State $closest[0] \gets distance(list[0], list[1])$
+    \State $closest[1] \gets list[0].x$
+    \State $closest[2] \gets list[0].y$
+    \State $closest[3] \gets list[1].x$
+    \State $closest[4] \gets list[1].y$
+    \For{$\texttt{j from 0 to lenght(list)-2 with increments of 1}$}
+        \For{$\texttt{i from 0 to lenght(list)-1 with increments of 1}$}
+        \If{$distance(list[j],list[i]) < closest[0] $} 
+            \State $closest[0] \gets distance(list[j], list[i])$
+            \State $ closest[1] \gets list[j].x$
+            \State $ closest[2] \gets list[j].y$
+            \State $ closest[3] \gets list[i].x$
+            \State $ closest[4] \gets list[i].y$
+        \EndIf
+        \EndFor
+        \State $ iterations \gets iterations + 1$
+    \EndFor
+\end{algorithmic}    
+\end{algorithm}
+\textbf{Nota:} distance(a, b) recibe dos puntos (a y b) y calcula su distancia usando la formula de $d =\sqrt{(Y_2-Y_1)^2+(X_2-X1)}$\\
+\begin{algorithm}[h!]
+\caption{Algoritmo divide y vencerás}
+\begin{algorithmic}
+\State $divideAndConquer(list)$
+    \State $ firsthalf[] \gets \texttt{the first half of the points in the list}$
+    \State $ secondhalf[] \gets \texttt{the second hlaf of the points in the list}$
+    \State $ first[] \gets bruteForce(firsthalf)$
+    \State $ second[] \gets bruteForce(secondhalf)$
+    \If{$first[0]>second[0]$}
+        \State $bruteforce(firsthalf, secondhalf,second)$
+        \State $\texttt{return second}$
+    \Else
+        \If{$first[0]=second[0]$}
+            \State $bruteforce(firsthalf, secondhalf,second)$
+            \State $\texttt{return second}$
+        \Else
+            \State $bruteforce(firsthalf, secondhalf,first)$
+            \State $\texttt{return first}$
+         \EndIf
+    \EndIf
+\end{algorithmic}    
+\end{algorithm}
+\FloatBarrier
+El algoritmo de divide y vencerás maneja dos casos. Estos son:
+\begin{itemize}
+    \item 
+    Los puntos más cercanos del conjunto se encuentran en el mismo subconjunto.
+    \item
+    Los puntos más cercanos del conjunto se encuentran cada uno en un subconjunto distinto.
+\end{itemize}
+Si se da el primer caso, el algoritmo anterior simplemente encuentra el par mas cercano al comparar el par de un grupo con el otro y escoger el menor.\\
+
+Cuando se da el segundo caso se deben revisar los puntos cercanos a donde se realizó la división del grupo de puntos para poder determinar correctamente el par de puntos más cercanos. Para ello se usa una versión que sigue la misma lógica del algoritmo de fuerza bruta, solo que un tanto modificada.\\
+
+\textbf{Nota: } El método discard(a, b, c) (donde a es una lista, b un índice de la misma y c un array) utilizado en el algoritmo 3 recorre la lista a y calcula la distancia entre cada punto y el punto en el índice b. Si la distancia es menor a la distancia c entonces guarda añade el punto a un array que retorna al final.
+Esto lo hace de manera recursiva, pues al estar los puntos en orden ascendente se puede saber si se debe seguir revisando en base al resultado obtenido.\\
+
+\begin{algorithm}[h!]
+\caption{Algoritmo de fuerza bruta (modificado)}
+\begin{algorithmic}
+\State $bruteForce(listA, listB, dist[])$
+    \State $firstgroup[] \gets discard(listA,lenght(listA)-1,dist[0])$
+    \State $secondgroup[] \gets discard(listB,0,dist[0])$
+    \For{$\texttt{j from 0 to lenght(listA)-1 with increments of 1}$}
+        \For{$\texttt{i from 0 to lenght(listB)-1 with increments of 1}$}
+        \If{$distance(list[j],list[i]) < dist[0] $} 
+            \State $dist[0] \gets distance(list[j], list[i])$
+            \State $ dist[1] \gets list[j].x$
+            \State $ dist[2] \gets list[j].y$
+            \State $ dist[3] \gets list[i].x$
+            \State $ dist[4] \gets list[i].y$
+        \EndIf
+        \EndFor
+        \State $ iterations \gets iterations + 1$
+    \EndFor
+\end{algorithmic}    
+\end{algorithm}
+\FloatBarrier
+Estos algoritmos fueron implementados en java y se puede ver en el siguiente repositorio de github : \url{https://github.com/adcerro/closest-pair}
+
+Luego de obtener los resultados en un archivo de texto se pueden generar las gráficas y tabalas con los resultados obtenidos.

@@ -99,7 +99,7 @@ public class Distance{
         closestD[4] = list.get(1).getY();
         for (int j = 0; j < list.size()-1; j++) {
             Point pj = list.get(j);
-            for (int i = list.indexOf(pj) + 1; i < list.size(); i++) {
+            for (int i = j + 1; i < list.size(); i++) {
                 if (distance(pj, list.get(i)) < closestD[0]) {
                     closestD[0] = distance(pj, list.get(i));
                     closestD[1] = pj.getX();

@@ -27,7 +27,7 @@ public class ClosestPair {
     public static ArrayList<Point> pointList;
 
     public static void main(String[] args) {
-        testBrute("brute.txt");
+        //testBrute("brute.txt");
         testDivide("divide.txt");
     }
 
@@ -75,7 +75,9 @@ public class ClosestPair {
                     sumTime = sumTime + time;
                     d.resetCounter();
                 }
-                printer.printf("%s\n", points + " " + sumIter / 4 + " " + sumTime / 4);
+                sumTime = sumTime/4;
+                sumIter = sumIter/4;
+                printer.printf("%s\n", points + " " + sumIter+ " " + sumTime);
             }
             printer.close();
         } catch (FileNotFoundException e) {
