@@ -1,0 +1,15 @@
+\section{Discusión}
+Si bien podemos ver en la tabla\ref{tab:divideT} que el número promedio de iteraciones que le tomó al algoritmo usando "divide y vencerás" es menor al numero de iteraciones que requiere usar el algoritmo de fuerza bruta, las gráficas siguen apuntando a que la implementación usada de dicha estrategia tiene complejidad cuadrática , por lo que, en torno a complejidad, ambos algoritmos son iguales\\
+
+Se esperaba que la complejidad del algoritmo de fuerza bruta fuera cuadrática, por lo que la implementación cumple la expectativa. Sin embargo, se esperaba que la complejidad del algoritmo de divide y vencerás fuera lineal, por lo que, la implementación no cumplió la expectativa.\\
+
+En la tabla\ref{tab:divideT} se observan tiempos de ejecución promedio bastante altos en comparación a los tiempos en la tabla \ref{tab:bruteT} para los primeros conjuntos de puntos, luego, mientras aumenta la cantidad de puntos se evidencia que este patrón se invierte, por lo que para conjuntos con muchos puntos divide y vencerás logra hallar el par más cercano más rápido que fuerza bruta.\\
+
+Entonces, ¿que debe mejorarse de la implementación actual del algoritmo con divide y vencerás?. Pues considero que lo primero a mejorar es que en los test se usó un limite para el valor aleatorio de Y de 1000 el cual puede resultar en puntos demasiado dispersos en el eje y para los n pequeños, lo que contrarresta en parte el beneficio que puede dar usar esta estrategia.\\
+
+Lo segundo es que al realizar un análisis del algoritmo 3 se tiene:\\
+$$\sum_{j = 1}^{N}\sum_{i=1}^{N}1$$
+$$\sum_{j = 1}^{N}N$$
+$$N \cdot N$$
+$$N^2$$
+Lo que nos deja ver que se debe mejorar la manera como el algoritmo recorre los arrays de puntos cercanos al centro para determinar un par cercano, pues revisa todos los posibles elementos cercanos en vez de poder descartar elementos más distantes en base los resultados que se van obteniendo.
