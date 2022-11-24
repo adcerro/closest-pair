@@ -60,20 +60,26 @@ public class ClosestPair {
         Distance d = new Distance();
         try {
             PrintWriter printer = new PrintWriter(name);
-            for (int i = 2; i <= 18; i++) {
+            for (int i = 2; i <= 4; i++) {
                 int points = (int) Math.pow(2, i);
                 long sumIter = 0;
                 long sumTime = 0;
                 for (int j = 1; j <= 4; j++) {
                     double[] closest = new double[5];
                     generate(points, (int) Math.pow(4, i), 1000);
+                    for(Point p : pointList){
+                        System.out.println(p.getX()+" ,"+p.getY());
+                    }
                     long start = System.nanoTime();
-                    closest = d.divideAndConquer(pointList);
+                    closest = d.divideAndConquer2(pointList);
                     long end = System.nanoTime();
                     long time = end - start;
                     sumIter = sumIter + d.getIter();
                     sumTime = sumTime + time;
+                    System.out.println(closest[0]+" : "+closest[1]+" , "+closest[2]+" <-> "+closest[3]+" , "+closest[4]);
                     d.resetCounter();
+                    closest = d.bruteForce(pointList);
+                    System.out.println(closest[0]+" : "+closest[1]+" , "+closest[2]+" <-> "+closest[3]+" , "+closest[4]);
                 }
                 sumTime = sumTime/4;
                 sumIter = sumIter/4;

@@ -31,13 +31,13 @@ Para contar las  iteraciones se pondrá un contador dentro de los ciclos usados 
     \EndFor
 \end{algorithmic}    
 \end{algorithm}
-\textbf{Nota:} distance(a, b) recibe dos puntos (a y b) y calcula su distancia usando la formula de $d =\sqrt{(Y_2-Y_1)^2+(X_2-X1)}$\\
+\textbf{Nota:} distance(a, b) recibe dos puntos (a y b) y calcula su distancia usando la formula de $d^2 =(Y_2-Y_1)^2+(X_2-X1)^2$\\
 \begin{algorithm}[h!]
 \caption{Algoritmo divide y vencerás}
 \begin{algorithmic}
 \State $divideAndConquer(list)$
     \State $ firsthalf[] \gets \texttt{the first half of the points in the list}$
-    \State $ secondhalf[] \gets \texttt{the second hlaf of the points in the list}$
+    \State $ secondhalf[] \gets \texttt{the second half of the points in the list}$
     \State $ first[] \gets bruteForce(firsthalf)$
     \State $ second[] \gets bruteForce(secondhalf)$
     \If{$first[0]>second[0]$}
@@ -92,4 +92,4 @@ Esto lo hace de manera recursiva, pues al estar los puntos en orden ascendente s
 \FloatBarrier
 Estos algoritmos fueron implementados en java y se puede ver en el siguiente repositorio de github : \url{https://github.com/adcerro/closest-pair}
 
-Luego de obtener los resultados en un archivo de texto se pueden generar las gráficas y tabalas con los resultados obtenidos.
+Luego de obtener los resultados en un archivo de texto se pueden generar las gráficas y tablas con los resultados obtenidos.
