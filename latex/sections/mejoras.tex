@@ -1,0 +1,37 @@
+\section{Mejoras}
+Teniendo en cuenta lo analizado en discución considero que se puede mejorar el algoritmos así:
+\begin{algorithm}[h!]
+\caption{Algoritmo divide y vencerás}
+\begin{algorithmic}
+\State $divideAndConquer(list)$
+    \State $ firsthalf[] \gets \texttt{the first half of the points in the list}$
+    \State $ secondhalf[] \gets \texttt{the second half of the points in the list}$
+    \If{$list.size()>6$}
+    \State $ f[] \gets \texttt{divideAndConquer(firsthalf)}$
+    \State $ s[] \gets \texttt{divideAndConquer(secondhalf)}$
+    \If{$f[0]>s[0]$}
+    \State $bruteForce(firsthalf, secondhalf, s)$
+    \State$\texttt{return s}$
+    \Else
+    \State $bruteForce(firsthalf, secondhalf, f)$
+    \State$\texttt{return f}$
+    \EndIf
+    \Else
+     \State $ first[] \gets bruteForce(firsthalf)$
+    \State $ second[] \gets bruteForce(secondhalf)$
+    \If{$first[0]>second[0]$}
+        \State $bruteforce(firsthalf, secondhalf,second)$
+        \State $\texttt{return second}$
+    \Else
+        \If{$first[0]=second[0]$}
+            \State $bruteforce(firsthalf, secondhalf,second)$
+            \State $\texttt{return second}$
+        \Else
+            \State $bruteforce(firsthalf, secondhalf,first)$
+            \State $\texttt{return first}$
+         \EndIf
+    \EndIf
+\EndIf
+\end{algorithmic}    
+\end{algorithm}
+\FloatBarrier

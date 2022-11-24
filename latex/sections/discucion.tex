@@ -12,4 +12,8 @@ $$\sum_{j = 1}^{N}\sum_{i=1}^{N}1$$
 $$\sum_{j = 1}^{N}N$$
 $$N \cdot N$$
 $$N^2$$
-Lo que nos deja ver que se debe mejorar la manera como el algoritmo recorre los arrays de puntos cercanos al centro para determinar un par cercano, pues revisa todos los posibles elementos cercanos en vez de poder descartar elementos más distantes en base los resultados que se van obteniendo.
+Lo que nos deja ver que se debe mejorar la manera como el algoritmo recorre los arrays de puntos cercanos al centro para determinar un par cercano, pues revisa todos los posibles elementos cercanos en vez de poder descartar elementos más distantes en base los resultados que se van obteniendo.\\
+
+Indagando más respecto a los resultados obtenidos para la implementación de divide y vencerás el profesor Misael resaltó que la implementación  (ver algoritmo 2) como tal no usa por completo el aproximamiento, ya que solo divide la lista en dos partes y nada más. Si bien esto beneficia los conjuntos de puntos pequeños, no trae beneficios para los conjuntos más grandes pues se siguen haciendo muchas comparaciones usando fuerza bruta, lo que resulta en la complejidad cuadrática.\\
+
+
