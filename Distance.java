@@ -27,6 +27,14 @@ public class Distance {
     public void bruteForce(ArrayList<Point> listA, ArrayList<Point> listB, double[] dist) {
         ArrayList<Point> firstGroup = discard(listA, listA.size() - 1, dist[0]);
         ArrayList<Point> secondGroup = discard(listB, 0, dist[0]);
+        System.out.println("firstGroup");
+        for (Point p : firstGroup) {
+            System.out.println(p.getX() + " , " + p.getY());
+        }
+        System.out.println("secondGroup");
+        for (Point p : secondGroup) {
+            System.out.println(p.getX() + " , " + p.getY());
+        }
         for (Point pointF : firstGroup) {
             for (Point points : secondGroup) {
                 if (distance(pointF, points) < dist[0]) {
@@ -79,9 +87,13 @@ public class Distance {
      * @param dist  The distance criteria
      */
     private void discard(Iterator<Point> a, ArrayList<Point> list, ArrayList<Point> listF, int index, double dist) {
-        if (a.hasNext() && Math.abs(list.get(index).getX() - a.next().getX()) < dist) {
-            listF.add(a.next());
-            discard(a, list, listF, index, dist);
+        if (a.hasNext()) {
+            Point compare = a.next();
+            System.out.println("comparing: "+compare.getX());
+            if (Math.pow(Math.abs(list.get(index).getX() - compare.getX()),2) < dist) {
+                listF.add(compare);
+                discard(a, list, listF, index, dist);
+            }
         }
 
     }
@@ -156,6 +168,7 @@ public class Distance {
             return first;
         }
     }
+
     /**
      * The following method iterates through the ArrayList and splits it into two
      * ArrayLists recursively with half the points each, then it executes the bruteforce method in
